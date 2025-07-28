@@ -1,0 +1,42 @@
+repos:
+  # 1. Ruff Linter & Formatter (for Python)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.3  # Specify the Ruff version (check the repo for the latest version)
+    hooks:
+      - id: ruff-check
+        args: [ --fix ]  # Run the linter and automatically fix issues
+      - id: ruff-format  # Run the formatter
+
+  # ----------------------------------------------------------------
+  # Basic File Checks (trailing spaces, file ends, etc.)
+  # ----------------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace  # Remove unnecessary whitespace at the end of lines
+      - id: end-of-file-fixer    # Add a newline at the end of files
+      - id: check-yaml           # Check YAML file syntax
+      - id: check-toml           # Check TOML file syntax (e.g., pyproject.toml)
+      - id: check-merge-conflict # Prevent merge conflict markers in commits
+
+  # ----------------------------------------------------------------
+  # Python Code Quality (isort, black, flake8)
+  # ----------------------------------------------------------------
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
+    hooks:
+      - id: isort  # Automatically sort import statements (configured for black compatibility)
+        name: isort (python)
+        args: ["--profile", "black"]
+
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black  # "Uncompromising" Python code formatter
+
+  - repo: https://github.com/pycqa/flake8
+    rev: 7.1.0
+    hooks:
+      - id: flake8  # Python code style and potential error checker
+        args: ["--max-line-length=88", "--ignore=E203,W503"]
+        # If you have a .flake8 file, you can omit these arguments
