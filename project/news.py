@@ -7,7 +7,6 @@ import time
 import pandas as pd
 import requests
 from newsapi import NewsApiClient
-
 from parse_url import parse_article_content
 
 NEWS_API_KEY = NewsApiClient(api_key="b01f1c03cbb44b31a1ad0fb98c6eb155")

@@ -1,7 +1,6 @@
+from news import get_latest_it_news_dataframe
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-
-from news import get_latest_it_news_dataframe
 
 
 def compute_similarity_matrix(self):

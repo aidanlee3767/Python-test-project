@@ -1,7 +1,6 @@
+from news import get_latest_it_news_dataframe
 from sklearn.cluster import KMeans
 from sklearn.feature_extraction.text import TfidfVectorizer
-
-from news import get_latest_it_news_dataframe
 
 if __name__ == "__main__":
     df = get_latest_it_news_dataframe(10)
