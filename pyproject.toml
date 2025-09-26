@@ -26,6 +26,7 @@ dependencies = [
     "timezonefinder>=8.0.0",
     "google-generativeai>=0.8.5",
     "beautifulsoup4>=4.13.5",
+    "beautifulsoup",
 ]
 
 [dependency-groups]
