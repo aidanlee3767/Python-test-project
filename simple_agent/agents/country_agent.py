@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from utils.api_client import TimeZoneClient
+from simple_agent.utils.api_client import TimeZoneClient
 
 
 class TimeAgent:
