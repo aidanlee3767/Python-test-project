@@ -1,3 +1,8 @@
 # My First Git Project
 # Python-test-project
-# Python-test-project
+
+```bash
+
+source .venv/bin/activate
+
+```
