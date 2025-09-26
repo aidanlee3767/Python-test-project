@@ -1,7 +1,7 @@
 [project]
-name = "getting-started-with-python"
+name = "python-test-project"
 version = "0.1.0"
-description = "getting started with python"
+description = "python-test-project"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
