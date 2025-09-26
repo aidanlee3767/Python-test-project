@@ -13,7 +13,7 @@ source  ${root}/.venv/bin/activate
 
 uv sync
 
-export PYTHONPATH=${PYTHONPATH}:${root}:${root}/ai_model:${root}/projects:${root}/simple_agent
+export PYTHONPATH=${PYTHONPATH}:${root}:${root}/ai_model:${root}/project:${root}/simple_agent
 
 if [[ ! -f "${root}/.git/hooks/pre-commit" ]]; then
   pre-commit install
