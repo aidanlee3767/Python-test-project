@@ -1,3 +1,11 @@
+# flake8: noqa E501
+from datetime import datetime
+from typing import Dict
+
+import pytz
+import requests
+
+
 class TimeZoneClient:
     """Client for timezone and time-related operations."""
 
@@ -75,7 +83,7 @@ class TimeZoneClient:
                 "timezone": timezone_str,
                 "current_time": current_time.strftime("%Y-%m-%d %H:%M:%S %Z"),
                 "utc_offset": current_time.strftime("%z"),
-                "is_dst": current_time.dst() != None
+                "is_dst": current_time.dst() is not None
                 and current_time.dst().total_seconds() > 0,
             }
         except Exception as e:
