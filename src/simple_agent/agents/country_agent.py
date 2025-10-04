@@ -1,16 +1,32 @@
 from datetime import datetime
 
-from simple_agent.utils.api_client import CountryClient
+from src.simple_agent.utils.api_client import CountryClient
 
 
 class CountryAgent:
-    """Agent for handling country-related queries."""
+    """
+    Agent for handling country-related queries.
+
+    Provides functionality to get information about countries and their cities.
+    Uses a CountryClient to access geographical data.
+
+    Attributes:
+        country_client: Client for country and city operations
+    """
 
     def __init__(self):
         self.country_client = CountryClient()
 
     def get_cities_by_country(self, country_name: str):
-        """Get major cities for a specific country."""
+        """
+        Get major cities for a specific country.
+
+        Args:
+            country_name (str): Name of the country to get cities for
+
+        Returns:
+            dict: List of major cities, city count, and operation status
+        """
         try:
             cities = self.country_client.get_cities_by_country(country_name)
             if not cities:

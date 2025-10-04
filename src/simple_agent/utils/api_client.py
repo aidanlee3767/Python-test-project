@@ -7,7 +7,16 @@ import requests
 
 
 class TimeZoneClient:
-    """Client for timezone and time-related operations."""
+    """
+    Client for timezone and time-related operations.
+
+    Provides functionality to get timezone information for cities and countries,
+    and calculate current time for specific timezones.
+
+    Attributes:
+        COUNTRY_TIMEZONES: Mapping of countries to their primary timezones
+        CITY_TIMEZONES: Mapping of major cities to their timezones
+    """
 
     # Mapping of countries to their primary timezones
     COUNTRY_TIMEZONES = {
@@ -64,17 +73,42 @@ class TimeZoneClient:
     }
 
     def get_timezone_by_city(self, city: str) -> str:
-        """Get timezone for a city."""
+        """
+        Get timezone for a city.
+
+        Args:
+            city (str): Name of the city (case-insensitive)
+
+        Returns:
+            str: Timezone string (e.g., 'Asia/Seoul') or None if not found
+        """
         city_lower = city.lower()
         return self.CITY_TIMEZONES.get(city_lower)
 
     def get_timezone_by_country(self, country: str) -> str:
-        """Get timezone for a country."""
+        """
+        Get timezone for a country.
+
+        Args:
+            country (str): Name of the country (case-insensitive)
+
+        Returns:
+            str: Timezone string (e.g., 'Asia/Seoul') or None if not found
+        """
         country_lower = country.lower()
         return self.COUNTRY_TIMEZONES.get(country_lower)
 
     def get_current_time(self, timezone_str: str) -> Dict:
-        """Get current time for a timezone."""
+        """
+        Get current time for a timezone.
+
+        Args:
+            timezone_str (str): Timezone string (e.g., 'Asia/Seoul')
+
+        Returns:
+            Dict: Time information including current time, UTC offset, and DST status,
+                 or error information if timezone is invalid
+        """
         try:
             tz = pytz.timezone(timezone_str)
             current_time = datetime.now(tz)
@@ -91,7 +125,16 @@ class TimeZoneClient:
 
 
 class CountryClient:
-    """Client for country information operations."""
+    """
+    Client for country information operations.
+
+    Provides functionality to get information about countries and their cities.
+    Maintains mappings between cities and countries for quick lookups.
+
+    Attributes:
+        country_cities: Mapping of countries to their major cities
+        city_to_country: Reverse mapping of cities to their countries
+    """
 
     def __init__(self):
         self.country_cities = {
@@ -121,12 +164,28 @@ class CountryClient:
                 self.city_to_country[city] = country
 
     def get_country_info_by_city(self, city_name: str):
-        """Get country for a city."""
+        """
+        Get country for a city.
+
+        Args:
+            city_name (str): Name of the city
+
+        Returns:
+            dict: Country information or None if city not found
+        """
         country = self.city_to_country.get(city_name)
         if country:
             return {"country": country}
         return None
 
     def get_cities_by_country(self, country_name: str):
-        """Get major cities for a country."""
+        """
+        Get major cities for a country.
+
+        Args:
+            country_name (str): Name of the country
+
+        Returns:
+            list: List of major cities or None if country not found
+        """
         return self.country_cities.get(country_name)

@@ -3,14 +3,23 @@ Controller for Simple Agent System
 Coordinates all agents and handles user queries
 """
 
-from simple_agent.agents.country_agent import CountryAgent
-from simple_agent.agents.time_agent import TimeAgent
+from src.simple_agent.agents.country_agent import CountryAgent
+from src.simple_agent.agents.time_agent import TimeAgent
 
 # from simple_agent.agents.news_agent import NewsAgent  # Uncomment when ready
 
 
 class AssistantController:
-    """Main controller for the assistant system."""
+    """
+    Main controller for the assistant system.
+
+    Coordinates all agents and handles user queries by routing them to
+    appropriate specialized agents (TimeAgent, CountryAgent, etc.).
+
+    Attributes:
+        time_agent: Agent for handling time-related queries
+        country_agent: Agent for handling country and city-related queries
+    """
 
     def __init__(self):
         """Initialize all agents."""
