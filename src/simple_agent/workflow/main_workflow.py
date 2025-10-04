@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
-from simple_agent.controller import AssistantController
+from src.simple_agent.controller import AssistantController
 
 # Load environment variables
 load_dotenv()
@@ -25,6 +25,11 @@ class MainWorkflow:
     - Understand user queries
     - Choose appropriate tools
     - Execute multiple steps if needed
+
+    Attributes:
+        client: Google Gemini API client
+        controller: AssistantController for handling function executions
+        functions: List of function declarations for Gemini
     """
 
     def __init__(self):

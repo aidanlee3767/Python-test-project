@@ -1,16 +1,33 @@
 from datetime import datetime
 
-from simple_agent.utils.api_client import TimeZoneClient
+from src.simple_agent.utils.api_client import TimeZoneClient
 
 
 class TimeAgent:
-    """Agent for handling time-related queries."""
+    """
+    Agent for handling time-related queries.
+
+    Provides functionality to get current time information for cities and countries
+    using timezone data. Supports single and multiple location queries.
+
+    Attributes:
+        timezone_client: Client for timezone and time operations
+    """
 
     def __init__(self):
         self.timezone_client = TimeZoneClient()
 
     def get_time_by_city(self, city_name: str):
-        """Get current time for a specific city."""
+        """
+        Get current time for a specific city.
+
+        Args:
+            city_name (str): Name of the city to get time for
+
+        Returns:
+            dict: Time information including timezone, current time, UTC offset,
+                 DST status, and operation status
+        """
         try:
             timezone_str = self.timezone_client.get_timezone_by_city(city_name)
             if not timezone_str:
@@ -42,7 +59,16 @@ class TimeAgent:
             return {"status": "error", "message": str(e), "city": city_name}
 
     def get_time_by_country(self, country_name: str):
-        """Get current time for a specific country."""
+        """
+        Get current time for a specific country.
+
+        Args:
+            country_name (str): Name of the country to get time for
+
+        Returns:
+            dict: Time information including timezone, current time, UTC offset,
+                 DST status, and operation status
+        """
         try:
             timezone_str = self.timezone_client.get_timezone_by_country(country_name)
             if not timezone_str:
@@ -74,7 +100,16 @@ class TimeAgent:
             return {"status": "error", "message": str(e), "country": country_name}
 
     def get_multiple_times(self, locations: list, location_type: str = "city"):
-        """Get time information for multiple locations."""
+        """
+        Get time information for multiple locations.
+
+        Args:
+            locations (list): List of location names
+            location_type (str): Type of locations ('city' or 'country')
+
+        Returns:
+            dict: Results for all locations with success count and time info
+        """
         results = {}
 
         for location in locations:
