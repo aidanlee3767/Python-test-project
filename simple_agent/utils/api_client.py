@@ -90,83 +90,31 @@ class TimeZoneClient:
             return {"error": f"Invalid timezone: {str(e)}"}
 
 
-class GeoLocationClient:
-    """Client for geolocation services using free APIs."""
+class CountryClient:
+    """Client for country information operations."""
 
-    # Database of major cities and their countries
-    CITY_COUNTRY_DB = {
-        "seoul": {"country": "South Korea", "country_code": "KR"},
-        "tokyo": {"country": "Japan", "country_code": "JP"},
-        "beijing": {"country": "China", "country_code": "CN"},
-        "shanghai": {"country": "China", "country_code": "CN"},
-        "mumbai": {"country": "India", "country_code": "IN"},
-        "delhi": {"country": "India", "country_code": "IN"},
-        "london": {"country": "United Kingdom", "country_code": "GB"},
-        "paris": {"country": "France", "country_code": "FR"},
-        "berlin": {"country": "Germany", "country_code": "DE"},
-        "rome": {"country": "Italy", "country_code": "IT"},
-        "madrid": {"country": "Spain", "country_code": "ES"},
-        "amsterdam": {"country": "Netherlands", "country_code": "NL"},
-        "stockholm": {"country": "Sweden", "country_code": "SE"},
-        "oslo": {"country": "Norway", "country_code": "NO"},
-        "copenhagen": {"country": "Denmark", "country_code": "DK"},
-        "new york": {"country": "United States", "country_code": "US"},
-        "los angeles": {"country": "United States", "country_code": "US"},
-        "chicago": {"country": "United States", "country_code": "US"},
-        "toronto": {"country": "Canada", "country_code": "CA"},
-        "vancouver": {"country": "Canada", "country_code": "CA"},
-        "sydney": {"country": "Australia", "country_code": "AU"},
-        "melbourne": {"country": "Australia", "country_code": "AU"},
-        "dubai": {"country": "United Arab Emirates", "country_code": "AE"},
-        "singapore": {"country": "Singapore", "country_code": "SG"},
-        "hong kong": {"country": "Hong Kong", "country_code": "HK"},
-        "moscow": {"country": "Russia", "country_code": "RU"},
-        "istanbul": {"country": "Turkey", "country_code": "TR"},
-        "cairo": {"country": "Egypt", "country_code": "EG"},
-        "lagos": {"country": "Nigeria", "country_code": "NG"},
-        "johannesburg": {"country": "South Africa", "country_code": "ZA"},
-        "sao paulo": {"country": "Brazil", "country_code": "BR"},
-        "rio de janeiro": {"country": "Brazil", "country_code": "BR"},
-        "mexico city": {"country": "Mexico", "country_code": "MX"},
-        "buenos aires": {"country": "Argentina", "country_code": "AR"},
-    }
+    def __init__(self):
+        self.country_cities = {
+            "South Korea": ["Seoul", "Busan", "Incheon", "Daegu", "Daejeon"],
+            "Japan": ["Tokyo", "Osaka", "Kyoto", "Yokohama", "Nagoya"],
+            "United Kingdom": ["London", "Manchester", "Birmingham", "Liverpool", "Edinburgh"],
+            "United States": ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"],
+            "Australia": ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide"],
+        }
+        
+        # Auto-build reverse lookup
+        self.city_to_country = {}
+        for country, cities in self.country_cities.items():
+            for city in cities:
+                self.city_to_country[city] = country
 
-    def get_city_info(self, city_name: str) -> Dict:
-        """Get country information for a city."""
-        city_lower = city_name.lower().strip()
+    def get_country_info_by_city(self, city_name: str):
+        """Get country for a city."""
+        country = self.city_to_country.get(city_name)
+        if country:
+            return {"country": country}
+        return None
 
-        # Check local database first
-        if city_lower in self.CITY_COUNTRY_DB:
-            return self.CITY_COUNTRY_DB[city_lower]
-
-        # Try online API as fallback
-        try:
-            return self._fetch_from_api(city_name)
-        except Exception as e:
-            raise Exception(
-                f"City '{city_name}' not found in database and API unavailable: {str(e)}"
-            )
-
-    def _fetch_from_api(self, city_name: str) -> Dict:
-        """Fallback to free geocoding API."""
-        try:
-            # Using OpenStreetMap Nominatim API (free, no key required)
-            url = "https://nominatim.openstreetmap.org/search"
-            params = {"q": city_name, "format": "json", "limit": 1, "addressdetails": 1}
-            headers = {"User-Agent": "SimpleAssistant/1.0"}
-
-            response = requests.get(url, params=params, headers=headers)
-            response.raise_for_status()
-
-            data = response.json()
-            if not data:
-                raise Exception(f"City '{city_name}' not found")
-
-            address = data[0].get("address", {})
-            country = address.get("country", "Unknown")
-            country_code = address.get("country_code", "XX").upper()
-
-            return {"country": country, "country_code": country_code}
-
-        except Exception as e:
-            raise Exception(f"Failed to fetch city info: {str(e)}")
+    def get_cities_by_country(self, country_name: str):
+        """Get major cities for a country."""
+        return self.country_cities.get(country_name)
