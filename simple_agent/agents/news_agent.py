@@ -3,11 +3,11 @@
 # flake8: noqa: E501
 
 import time
-from typing import Optional, List
+from typing import Optional
 
 import pandas as pd
 import requests
-from newsapi import NewsApiClient
+
 from simple_agent.agents.parse_url import parse_article_content
 
 NEWS_API_KEY = "b01f1c03cbb44b31a1ad0fb98c6eb155"
@@ -18,7 +18,7 @@ def get_latest_news_json(
     category: Optional[str] = None,
     country: Optional[str] = "us",
     query: Optional[str] = None,
-    language: str = "en"
+    language: str = "en",
 ):
     """
     NewsAPI를 사용하여 최신 뉴스 기사를 JSON 형태로 가져옵니다.
@@ -45,7 +45,7 @@ def get_latest_news_json(
             "q": query,
             "language": language,
             "pageSize": num_articles,
-            "sortBy": "publishedAt"  # 최신순
+            "sortBy": "publishedAt",  # 최신순
         }
     else:
         # query가 없으면 /top-headlines 사용
@@ -91,7 +91,7 @@ def get_latest_news_formatted(
     category: Optional[str] = None,
     country: Optional[str] = "us",
     query: Optional[str] = None,
-    language: str = "en"
+    language: str = "en",
 ):
     """뉴스를 포맷팅된 문자열 리스트로 반환"""
     articles = get_latest_news_json(num_articles, category, country, query, language)
@@ -112,11 +112,11 @@ def get_latest_news_dataframe(
     country: Optional[str] = "us",
     query: Optional[str] = None,
     language: str = "en",
-    include_parsed_content: bool = True
+    include_parsed_content: bool = True,
 ) -> pd.DataFrame:
     """뉴스를 DataFrame으로 반환"""
     articles = get_latest_news_json(num_articles, category, country, query, language)
-    
+
     if not articles:
         return pd.DataFrame()
 
@@ -227,22 +227,28 @@ def add_parsed_content_to_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     # 사용 예시:
-    
+
     # 1. IT 뉴스 (기존 방식)
     print("\n=== IT 뉴스 ===")
-    df_tech = get_latest_news_dataframe(5, category="technology", include_parsed_content=False)
-    
+    df_tech = get_latest_news_dataframe(
+        5, category="technology", include_parsed_content=False
+    )
+
     # 2. Seoul 관련 뉴스
     print("\n=== Seoul 뉴스 ===")
     df_seoul = get_latest_news_dataframe(5, query="Seoul", include_parsed_content=False)
-    
+
     # 3. 문화 뉴스
     print("\n=== 문화 뉴스 ===")
-    df_culture = get_latest_news_dataframe(5, query="culture", include_parsed_content=False)
-    
+    df_culture = get_latest_news_dataframe(
+        5, query="culture", include_parsed_content=False
+    )
+
     # 4. 한국 뉴스 (한글)
     print("\n=== 한국 뉴스 ===")
-    df_korea = get_latest_news_dataframe(5, country="kr", language="ko", include_parsed_content=False)
-    
+    df_korea = get_latest_news_dataframe(
+        5, country="kr", language="ko", include_parsed_content=False
+    )
+
     # CSV 저장 예시
     df_tech.to_csv("it_news_articles.csv", index=False)

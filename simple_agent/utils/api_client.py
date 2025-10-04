@@ -97,11 +97,23 @@ class CountryClient:
         self.country_cities = {
             "South Korea": ["Seoul", "Busan", "Incheon", "Daegu", "Daejeon"],
             "Japan": ["Tokyo", "Osaka", "Kyoto", "Yokohama", "Nagoya"],
-            "United Kingdom": ["London", "Manchester", "Birmingham", "Liverpool", "Edinburgh"],
-            "United States": ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix"],
+            "United Kingdom": [
+                "London",
+                "Manchester",
+                "Birmingham",
+                "Liverpool",
+                "Edinburgh",
+            ],
+            "United States": [
+                "New York",
+                "Los Angeles",
+                "Chicago",
+                "Houston",
+                "Phoenix",
+            ],
             "Australia": ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide"],
         }
-        
+
         # Auto-build reverse lookup
         self.city_to_country = {}
         for country, cities in self.country_cities.items():

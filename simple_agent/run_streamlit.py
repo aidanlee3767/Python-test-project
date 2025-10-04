@@ -1,8 +1,4 @@
 import subprocess
-import sys
-
-
-
 
 
 def run_streamlit():
@@ -20,9 +16,6 @@ def main():
     print("=" * 50)
     print("🤖 스마트 개인 비서 Streamlit 앱")
     print("=" * 50)
-
-    # 데모 데이터 생성
-    run_demo_data_creation()
 
     print("\n" + "=" * 50)
     print("🌐 Streamlit 웹 인터페이스 실행")
