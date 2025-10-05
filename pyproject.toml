@@ -4,25 +4,17 @@ version = "0.1.0"
 description = "python-test-project"
 readme = "README.md"
 requires-python = ">=3.11"
-
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
-[tool.setuptools.packages.find]
-where = ["src"]
 dependencies = [
     "black>=25.1.0",
     "fastapi>=0.116.1",
     "flake8>=7.3.0",
     "jinja2>=3.1.6",
-    "pre-commit>=4.2.0",
     "pytest>=8.4.1",
     "python-dotenv>=1.1.1",
     "python-multipart>=0.0.20",
     "uvicorn>=0.35.0",
     "requests>=2.32.4,<3.0.0",
-    "matplotlib (>=3.10.3,<4.0.0)",
+    "matplotlib>=3.10.3,<4.0.0",
     "newsapi-python>=0.2.7",
     "pandas>=2.3.1",
     "ipykernel>=6.30.1",
@@ -34,6 +26,13 @@ dependencies = [
     "google-generativeai>=0.8.5",
     "beautifulsoup4>=4.13.5",
 ]
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [dependency-groups]
 dev = [
