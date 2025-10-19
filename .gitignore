@@ -219,3 +219,4 @@ __marimo__/
 *.gif
 .idea
 .DS_Store
+.DS_Store*
