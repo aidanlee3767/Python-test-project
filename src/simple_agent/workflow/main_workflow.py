@@ -7,14 +7,19 @@ Uses Google Gemini to handle multi-step queries with function calling
 
 import os
 
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 from google import genai
 from google.genai import types
 
 from src.simple_agent.controller import AssistantController
+from src.simple_agent.agents.news_agent import get_latest_news_json
 
 # Load environment variables
-load_dotenv()
+# load_dotenv()
+
+# GEMINI_API_KEY= "AIzaSyC-js7oqCW8p6fjiTLtiD0_jB-WcrbmtXk"
+# GEMINI_API_KEY= "AIzaSyC3qq5B8U4i3Qcznnx2BgOrrxxZ-e7D8NM"
+GEMINI_API_KEY="AIzaSyA_5LBadlMV-CbLP64mNVX9O4JRPq43D78"
 
 
 class MainWorkflow:
@@ -42,7 +47,7 @@ class MainWorkflow:
         """
 
         # Get Gemini API key from environment
-        api_key = os.getenv("GEMINI_API_KEY")
+        api_key = GEMINI_API_KEY
         if not api_key:
             raise ValueError("GEMINI_API_KEY 환경변수를 설정해주세요.")
 
@@ -111,15 +116,42 @@ class MainWorkflow:
             },
             {
                 "name": "get_news",
-                "description": "최신 IT 기술 뉴스를 조회합니다. Get latest IT/technology news.",
+                "description": """Get latest news articles with filters. Can search by category, country, language, or keywords.
+                
+                Categories: business, entertainment, general, health, science, sports, technology
+                Countries: us, kr, gb, fr, de, jp, etc. (2-letter ISO codes)
+                Languages: en, ko, fr, de, es, etc. (2-letter ISO codes)
+                
+                Examples:
+                - French business news: category="business", language="fr"
+                - Korean technology news: category="technology", country="kr"
+                - Search AI news: query="artificial intelligence"
+                """,
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "num_articles": {
                             "type": "integer",
-                            "description": "가져올 뉴스 개수 (기본값: 5)",
+                            "description": "Number of articles to fetch (default: 5, max: 100)",
                             "default": 5,
-                        }
+                        },
+                        "category": {
+                            "type": "string",
+                            "description": "News category: business, entertainment, general, health, science, sports, technology",
+                            "enum": ["business", "entertainment", "general", "health", "science", "sports", "technology"],
+                        },
+                        "country": {
+                            "type": "string",
+                            "description": "2-letter country code (e.g., us, kr, gb, fr, de, jp)",
+                        },
+                        "language": {
+                            "type": "string",
+                            "description": "2-letter language code (e.g., en, ko, fr, de, es)",
+                        },
+                        "query": {
+                            "type": "string",
+                            "description": "Search keyword (e.g., 'AI', 'Olympics', 'climate change')",
+                        },
                     },
                 },
             },
@@ -200,10 +232,22 @@ class MainWorkflow:
                     return f"{city}의 국가 정보를 찾을 수 없습니다."
 
             elif function_name == "get_news":
+                # Extract parameters with defaults
                 num_articles = arguments.get("num_articles", 5)
+                category = arguments.get("category")
+                country = arguments.get("country")
+                language = arguments.get("language")
+                query = arguments.get("query")
 
                 try:
-                    articles = get_latest_it_news_json(num_articles)
+                    # Call the enhanced news API with all parameters
+                    articles = get_latest_news_json(
+                        num_articles=num_articles,
+                        category=category,
+                        country=country,
+                        language=language,
+                        query=query,
+                    )
 
                     if not articles:
                         return "현재 조회 가능한 뉴스가 없습니다."
@@ -218,11 +262,26 @@ class MainWorkflow:
 
                         news_item = f"{i}. {title}\n   출처: {source}"
                         if description:
-                            news_item += f"\n   요약: {description[:100]}..."
+                            # Truncate long descriptions
+                            desc_preview = description[:150] + "..." if len(description) > 150 else description
+                            news_item += f"\n   요약: {desc_preview}"
                         news_item += f"\n   링크: {url}"
                         news_list.append(news_item)
 
-                    return "\n\n".join(news_list)
+                    # Add search criteria info
+                    criteria = []
+                    if category:
+                        criteria.append(f"카테고리: {category}")
+                    if country:
+                        criteria.append(f"국가: {country}")
+                    if language:
+                        criteria.append(f"언어: {language}")
+                    if query:
+                        criteria.append(f"검색어: {query}")
+                    
+                    result_header = f"📰 뉴스 검색 결과 ({', '.join(criteria) if criteria else '전체'})\n\n"
+                    
+                    return result_header + "\n\n".join(news_list)
 
                 except Exception as e:
                     return f"뉴스 조회 중 오류가 발생했습니다: {str(e)}"
@@ -325,14 +384,20 @@ def main():
 
         # Test cases
         test_cases = [
-            "서울 시간 알려줘",
-            "도쿄 시간은?",
-            "한국의 주요 도시 알려줘",
-            "서울과 도쿄의 시간을 동시에 알려줘",
-            "서울은 어느 나라야?",
-            "도쿄는 어느 국가에 속해있어?",
-            "최신 IT 뉴스 3개 알려줘",
-            "기술 뉴스 보여줘",
+            # "서울 시간 알려줘",
+            # "도쿄 시간은?",
+            # "한국의 주요 도시 알려줘",
+            # "서울과 도쿄의 시간을 동시에 알려줘",
+            # "서울은 어느 나라야?",
+            # "도쿄는 어느 국가에 속해있어?",
+            # "최신 IT 뉴스 3개 알려줘",
+            # "기술 뉴스 보여줘",
+            # NEW TEST CASES for enhanced news API
+            " 미국 비즈니스 뉴스 알려줘",  # French business news
+            "Get me business news in French",  # English query for French business news
+            "한국 기술 뉴스 5개 보여줘",  # Korean tech news
+            "Show me health news from the UK",  # UK health news
+            "AI에 대한 최신 뉴스 알려줘",  # AI news search
         ]
 
         print(f"\n🧪 {len(test_cases)}개 테스트 케이스 실행:")
